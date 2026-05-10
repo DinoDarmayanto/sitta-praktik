@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Tracking Pengiriman - SITTA UT</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <div class="tracking-container">
+      <!-- BUTTON BACK -->
+
+      <a href="dashboard.html" class="back-btn"> Back </a>
+
+      <!-- HEADER -->
+
+      <div class="tracking-header">
+        <h1>Tracking Pengiriman</h1>
+
+        <p>Lacak status pengiriman bahan ajar Universitas Terbuka</p>
+      </div>
+
+      <!-- FORM TRACKING -->
+
+      <div class="tracking-search">
+        <input
+          type="text"
+          id="nomorDO"
+          placeholder="Masukkan Nomor Delivery Order"
+        />
+
+        <button id="cariTracking">Lacak</button>
+      </div>
+
+      <!-- HASIL TRACKING -->
+
+      <div id="hasilTracking">
+        <!-- DATA TRACKING MUNCUL DARI JAVASCRIPT -->
+      </div>
+    </div>
+
+    <!-- DATA DUMMY -->
+
+    <script src="js/data.js"></script>
+
+    <!-- SCRIPT -->
+
+    <script src="js/script.js"></script>
+  </body>
+</html>

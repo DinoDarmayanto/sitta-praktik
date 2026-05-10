@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Informasi Bahan Ajar - SITTA UT</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <div class="stok-container">
+      <!-- BUTTON BACK -->
+
+      <a href="dashboard.html" class="back-btn"> Back </a>
+
+      <!-- HEADER -->
+
+      <div class="stok-header">
+        <h1>Informasi Bahan Ajar</h1>
+
+        <p class="subtitle">Peragaan Data Bahan Ajar Universitas Terbuka</p>
+      </div>
+
+      <!-- FORM TAMBAH DATA -->
+
+      <div class="tambah-form">
+        <input type="text" id="kodeBarang" placeholder="Masukkan Kode Barang" />
+
+        <input type="text" id="namaBarang" placeholder="Masukkan Nama Barang" />
+
+        <input
+          type="number"
+          id="stokBarang"
+          placeholder="Masukkan Jumlah Stok"
+        />
+
+        <button id="tambahBarang">Tambah Data</button>
+      </div>
+
+      <!-- LIST DATA BAHAN AJAR -->
+
+      <div id="listBahanAjar">
+        <!-- DATA DARI JAVASCRIPT -->
+      </div>
+    </div>
+
+    <!-- DATA DUMMY -->
+
+    <script src="js/data.js"></script>
+
+    <!-- SCRIPT -->
+
+    <script src="js/script.js"></script>
+  </body>
+</html>
