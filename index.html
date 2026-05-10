@@ -11,6 +11,16 @@
 
   <body class="login-page">
     <div class="login-container">
+      <div class="logo-ut">
+
+        <img
+          src="assets/Logo_Universitas_Terbuka.svg.png"
+          alt="Logo UT"
+        >
+        <p class="subtitle-login">
+          Sistem Informasi Transaksi Bahan Ajar
+        </p>
+      </div>
       <h1>Selamat Datang</h1>
 
       <form id="loginForm">
@@ -40,15 +50,27 @@
           <span class="close" id="closeRegister">&times;</span>
 
           <h2>Daftar Akun</h2>
-
-          <input type="text" placeholder="Nama Lengkap" />
-
-          <input type="email" placeholder="Email" />
-
-          <input type="password" placeholder="Password" />
-
-          <button id="daftarButton">Daftar</button>
-        </div>
+          <input
+          type="text"
+          id="registerNama"
+          placeholder="Nama Lengkap"
+        />
+        
+        <input
+          type="email"
+          id="registerEmail"
+          placeholder="Email"
+        />
+        
+        <input
+          type="password"
+          id="registerPassword"
+          placeholder="Password"
+        />
+        
+        <button id="daftarButton">
+          Daftar
+        </button> </div>
       </div>
     </div>
 

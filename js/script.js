@@ -1,36 +1,241 @@
 // =======================
+// ELEMENT MODAL REGISTER
+// =======================
+
+const registerLink =
+document.getElementById('registerLink');
+
+const registerModal =
+document.getElementById('registerModal');
+
+const closeRegister =
+document.getElementById('closeRegister');
+
+const daftarButton =
+document.getElementById('daftarButton');
+
+
+
+// =======================
+// BUKA MODAL REGISTER
+// =======================
+
+if (registerLink) {
+
+registerLink.addEventListener('click', function (e) {
+
+  e.preventDefault();
+
+  registerModal.style.display = 'block';
+
+});
+
+}
+
+
+
+// =======================
+// TUTUP MODAL REGISTER
+// =======================
+
+if (closeRegister) {
+
+closeRegister.addEventListener('click', function () {
+
+  registerModal.style.display = 'none';
+
+});
+
+}
+
+
+
+// =======================
+// KLIK LUAR MODAL
+// =======================
+
+window.addEventListener('click', function (e) {
+
+if (e.target == registerModal) {
+
+  registerModal.style.display = 'none';
+
+}
+
+});
+
+
+
+// =======================
+// REGISTER USER
+// =======================
+
+if (daftarButton) {
+
+daftarButton.addEventListener('click', function () {
+
+  const nama =
+    document.getElementById('registerNama').value;
+
+  const email =
+    document.getElementById('registerEmail').value;
+
+  const password =
+    document.getElementById('registerPassword').value;
+
+  // VALIDASI
+
+  if (
+    nama === '' ||
+    email === '' ||
+    password === ''
+  ) {
+
+    alert('Semua field wajib diisi!');
+    return;
+
+  }
+
+  // AMBIL DATA USER LAMA
+
+  let users =
+    JSON.parse(localStorage.getItem('users')) || [];
+
+  // CEK EMAIL DUPLIKAT
+
+  const emailSudahAda = users.find(function (user) {
+
+    return user.email === email;
+
+  });
+
+  if (emailSudahAda) {
+
+    alert('Email sudah terdaftar!');
+    return;
+
+  }
+
+  // DATA USER BARU
+
+  const userBaru = {
+
+    nama: nama,
+
+    email: email,
+
+    password: password,
+
+  };
+
+  // SIMPAN
+
+  users.push(userBaru);
+
+  localStorage.setItem(
+    'users',
+    JSON.stringify(users)
+  );
+
+  alert('Pendaftaran berhasil!');
+
+  // RESET FORM
+
+  document.getElementById('registerNama').value = '';
+
+  document.getElementById('registerEmail').value = '';
+
+  document.getElementById('registerPassword').value = '';
+
+  // TUTUP MODAL
+
+  registerModal.style.display = 'none';
+
+});
+
+}
+
+
+
+// =======================
 // LOGIN
 // =======================
 
-const loginForm = document.getElementById('loginForm');
+const loginForm =
+document.getElementById('loginForm');
 
 if (loginForm) {
-  loginForm.addEventListener('submit', function (e) {
-    e.preventDefault();
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+loginForm.addEventListener('submit', function (e) {
 
-    // VALIDASI KOSONG
+  e.preventDefault();
 
-    if (email === '' || password === '') {
-      alert('Email dan Password wajib diisi!');
-      return;
-    }
+  const email =
+    document.getElementById('email').value;
 
-    // LOGIN BERHASIL
+  const password =
+    document.getElementById('password').value;
 
-    if (email === 'admin@gmail.com' && password === '12345') {
-      alert('Login berhasil!');
+  // VALIDASI
 
-      window.location.href = 'dashboard.html';
-    }
+  if (email === '' || password === '') {
 
-    // LOGIN GAGAL
-    else {
-      alert('email/password yang anda masukkan salah');
-    }
+    alert('Email dan Password wajib diisi!');
+    return;
+
+  }
+
+  // LOGIN ADMIN
+
+  if (
+    email === 'admin@gmail.com' &&
+    password === '12345'
+  ) {
+
+    alert('Login berhasil!');
+
+    window.location.href = 'dashboard.html';
+
+    return;
+
+  }
+
+  // AMBIL DATA USER
+
+  let users =
+    JSON.parse(localStorage.getItem('users')) || [];
+
+  // CEK USER
+
+  const userDitemukan = users.find(function (user) {
+
+    return (
+      user.email === email &&
+      user.password === password
+    );
+
   });
+
+  // LOGIN BERHASIL
+
+  if (userDitemukan) {
+
+    alert('Login berhasil!');
+
+    window.location.href = 'dashboard.html';
+
+  }
+
+  // LOGIN GAGAL
+
+  else {
+
+    alert('email/password yang anda masukkan salah');
+
+  }
+
+});
+
 }
 
 // =======================
@@ -51,55 +256,7 @@ if (greeting) {
   }
 }
 
-// =======================
-// MODAL REGISTER
-// =======================
 
-const registerLink = document.getElementById('registerLink');
-
-const registerModal = document.getElementById('registerModal');
-
-const closeRegister = document.getElementById('closeRegister');
-
-// BUKA MODAL
-
-if (registerLink) {
-  registerLink.addEventListener('click', function (e) {
-    e.preventDefault();
-
-    registerModal.style.display = 'block';
-  });
-}
-
-// TUTUP MODAL
-
-if (closeRegister) {
-  closeRegister.addEventListener('click', function () {
-    registerModal.style.display = 'none';
-  });
-}
-
-// KLIK LUAR MODAL
-
-window.addEventListener('click', function (e) {
-  if (e.target == registerModal) {
-    registerModal.style.display = 'none';
-  }
-});
-
-// =======================
-// BUTTON DAFTAR
-// =======================
-
-const daftarButton = document.getElementById('daftarButton');
-
-if (daftarButton) {
-  daftarButton.addEventListener('click', function () {
-    alert('Pendaftaran berhasil!');
-
-    window.location.href = 'dashboard.html';
-  });
-}
 // =======================
 // TRACKING
 // =======================

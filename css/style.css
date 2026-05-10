@@ -422,3 +422,18 @@ body {
 .back-btn:hover {
   background: #0055aa;
 }
+/* LOGO UT */
+
+.logo-ut {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logo-ut img {
+  width: 110px;
+}
+.subtitle-login {
+  text-align: center;
+  color: gray;
+  margin-bottom: 25px;
+}
