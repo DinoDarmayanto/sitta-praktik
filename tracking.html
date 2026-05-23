@@ -3,51 +3,269 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Tracking Pengiriman - SITTA UT</title>
 
     <link rel="stylesheet" href="css/style.css" />
   </head>
 
   <body>
-    <div class="tracking-container">
-      <!-- BUTTON BACK -->
+    <div id="app" v-cloak>
 
-      <a href="dashboard.html" class="back-btn"> Back </a>
+      <div class="tracking-container">
 
-      <!-- HEADER -->
+        <a href="dashboard.html" class="back-btn">
+          Back
+        </a>
 
-      <div class="tracking-header">
-        <h1>Tracking Pengiriman</h1>
+        <div class="tracking-header">
+          <h1>Tracking Pengiriman</h1>
 
-        <p>Lacak status pengiriman bahan ajar Universitas Terbuka</p>
+          <p>
+            Lacak status pengiriman bahan ajar Universitas Terbuka
+          </p>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="tracking-search">
+
+          <input
+            type="text"
+            v-model="keywordDO"
+            placeholder="Contoh: DO2025-0001"
+          />
+
+          <button @click="cariTracking">
+            Lacak
+          </button>
+
+        </div>
+
+        <!-- HASIL TRACKING -->
+        <div
+          class="hasil-tracking"
+          v-if="hasilTracking"
+        >
+
+          <h3>Hasil Tracking</h3>
+
+          <p>
+            <strong>Nomor DO:</strong>
+            {{ hasilTracking.nomorDO }}
+          </p>
+
+          <p>
+            <strong>NIM:</strong>
+            {{ hasilTracking.nim }}
+          </p>
+
+          <p>
+            <strong>Nama:</strong>
+            {{ hasilTracking.nama }}
+          </p>
+
+          <p>
+            <strong>Ekspedisi:</strong>
+            {{ hasilTracking.ekspedisi }}
+          </p>
+
+          <p>
+            <strong>Paket:</strong>
+            {{ hasilTracking.paket }}
+          </p>
+
+          <p>
+            <strong>Tanggal Kirim:</strong>
+            {{ hasilTracking.tanggalKirim }}
+          </p>
+
+          <p>
+            <strong>Status:</strong>
+            {{ hasilTracking.status }}
+          </p>
+
+          <p>
+            <strong>Total Harga:</strong>
+            Rp {{ hasilTracking.totalHarga }}
+          </p>
+
+          <!-- PERJALANAN -->
+          <div
+            v-if="hasilTracking.perjalanan"
+            class="detail-perjalanan"
+          >
+
+            <h4>Perjalanan Paket</h4>
+
+            <ul>
+
+              <li
+                v-for="item in hasilTracking.perjalanan"
+                :key="item.waktu"
+              >
+                <strong>{{ item.waktu }}</strong>
+                <br />
+                {{ item.keterangan }}
+              </li>
+
+            </ul>
+
+          </div>
+
+        </div>
+
+        <!-- ERROR -->
+        <div
+          v-else-if="pesanError"
+          class="error-message"
+        >
+          {{ pesanError }}
+        </div>
+
+        <!-- FORM DO -->
+        <div class="form-do">
+
+          <h3>Tambah Delivery Order Baru</h3>
+
+          <input
+            type="text"
+            v-model="form.nim"
+            placeholder="Masukkan NIM"
+          />
+
+          <input
+            type="text"
+            v-model="form.nama"
+            placeholder="Masukkan Nama"
+          />
+
+          <select v-model="form.ekspedisi">
+
+            <option value="">
+              Pilih Ekspedisi
+            </option>
+
+            <option
+              v-for="item in pengirimanList"
+              :key="item.kode"
+              :value="item.nama"
+            >
+              {{ item.nama }}
+            </option>
+
+          </select>
+
+          <select v-model="form.kodePaket">
+
+            <option value="">
+              Pilih Paket Bahan Ajar
+            </option>
+
+            <option
+              v-for="item in paket"
+              :key="item.kode"
+              :value="item.kode"
+            >
+              {{ item.kode }} - {{ item.nama }}
+            </option>
+
+          </select>
+
+          <!-- DETAIL PAKET -->
+          <div
+            v-if="paketTerpilih"
+            class="detail-paket"
+          >
+
+            <h4>Detail Paket</h4>
+
+            <p>
+              <strong>Kode Paket:</strong>
+              {{ paketTerpilih.kode }}
+            </p>
+
+            <p>
+              <strong>Nama Paket:</strong>
+              {{ paketTerpilih.nama }}
+            </p>
+
+            <p>
+              <strong>Harga:</strong>
+              Rp {{ paketTerpilih.harga }}
+            </p>
+
+          </div>
+
+          <input
+            type="date"
+            v-model="form.tanggalKirim"
+          />
+
+          <p>
+            <strong>Total Harga:</strong>
+            Rp {{ totalHarga }}
+          </p>
+
+          <button @click="tambahDO">
+            Tambah DO
+          </button>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="daftar-do">
+
+          <h3>Daftar Delivery Order</h3>
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Nomor DO</th>
+                <th>NIM</th>
+                <th>Nama</th>
+                <th>Ekspedisi</th>
+                <th>Paket</th>
+                <th>Tanggal Kirim</th>
+                <th>Status</th>
+                <th>Total Harga</th>
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              <tr
+                v-for="item in trackingList"
+                :key="item.nomorDO"
+              >
+
+                <td>{{ item.nomorDO }}</td>
+                <td>{{ item.nim }}</td>
+                <td>{{ item.nama }}</td>
+                <td>{{ item.ekspedisi }}</td>
+                <td>{{ item.paket }}</td>
+                <td>{{ item.tanggalKirim }}</td>
+                <td>{{ item.status }}</td>
+                <td>Rp {{ item.totalHarga }}</td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
       </div>
 
-      <!-- FORM TRACKING -->
-
-      <div class="tracking-search">
-        <input
-          type="text"
-          id="nomorDO"
-          placeholder="Masukkan Nomor Delivery Order"
-        />
-
-        <button id="cariTracking">Lacak</button>
-      </div>
-
-      <!-- HASIL TRACKING -->
-
-      <div id="hasilTracking">
-        <!-- DATA TRACKING MUNCUL DARI JAVASCRIPT -->
-      </div>
     </div>
 
-    <!-- DATA DUMMY -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-    <script src="js/data.js"></script>
+    <script src="js/dataBahanAjar.js"></script>
 
-    <!-- SCRIPT -->
+    <script src="js/tracking-app.js"></script>
 
-    <script src="js/script.js"></script>
   </body>
 </html>

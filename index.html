@@ -3,24 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>SITTA UT</title>
-
     <link rel="stylesheet" href="css/style.css" />
   </head>
 
   <body class="login-page">
     <div class="login-container">
       <div class="logo-ut">
+        <img src="assets/Logo_Universitas_Terbuka.svg.png" alt="Logo UT" />
 
-        <img
-          src="assets/Logo_Universitas_Terbuka.svg.png"
-          alt="Logo UT"
-        >
         <p class="subtitle-login">
           Sistem Informasi Transaksi Bahan Ajar
         </p>
       </div>
+
       <h1>Selamat Datang</h1>
 
       <form id="loginForm">
@@ -36,44 +32,46 @@
           <a href="#">Lupa password ?</a>
         </div>
 
-        <button type="submit" class="login-btn">Masuk</button>
+        <button type="submit" class="login-btn">
+          Masuk
+        </button>
       </form>
 
       <div class="register-link">
         <a href="#" id="registerLink">Belum punya akun?</a>
       </div>
+    </div>
 
-      <!-- MODAL REGISTER -->
+    <div class="modal" id="registerModal">
+      <div class="modal-content">
+        <span class="close" id="closeRegister">&times;</span>
 
-      <div class="modal" id="registerModal">
-        <div class="modal-content">
-          <span class="close" id="closeRegister">&times;</span>
+        <h2>Daftar Akun</h2>
 
-          <h2>Daftar Akun</h2>
-          <input
+        <input
           type="text"
           id="registerNama"
           placeholder="Nama Lengkap"
         />
-        
+
         <input
           type="email"
           id="registerEmail"
           placeholder="Email"
         />
-        
+
         <input
           type="password"
           id="registerPassword"
           placeholder="Password"
         />
-        
+
         <button id="daftarButton">
           Daftar
-        </button> </div>
+        </button>
       </div>
     </div>
 
-    <script src="js/script.js"></script>
+    <script src="js/auth.js"></script>
   </body>
 </html>

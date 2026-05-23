@@ -437,3 +437,316 @@ body {
   color: gray;
   margin-bottom: 25px;
 }
+
+/* =========================
+   STOK PAGE ONLY
+========================= */
+
+.stok-container .filter-container {
+  margin-bottom: 25px;
+}
+
+.stok-container .filter-container select {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  min-width: 220px;
+}
+
+/* TABLE */
+
+.stok-container table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.stok-container table thead {
+  background: #003366;
+  color: white;
+}
+
+.stok-container table th {
+  padding: 15px;
+  text-align: left;
+}
+
+.stok-container table td {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.stok-container table tbody tr:hover {
+  background: #f8f9fc;
+}
+
+/* STATUS */
+
+.stok-container .status-aman {
+  color: green;
+  font-weight: bold;
+}
+
+.stok-container .status-menipis {
+  color: orange;
+  font-weight: bold;
+}
+
+.stok-container .status-kosong {
+  color: red;
+  font-weight: bold;
+}
+
+/* =========================
+   TRACKING PAGE ONLY
+========================= */
+
+.tracking-container .form-do {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fc;
+  border-radius: 12px;
+}
+
+.tracking-container .form-do h3 {
+  margin-bottom: 15px;
+  color: #003366;
+}
+
+.tracking-container .form-do input,
+.tracking-container .form-do select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.tracking-container .form-do button {
+  padding: 12px 20px;
+  background: #f2c94c;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.tracking-container .detail-paket {
+  background: white;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-left: 5px solid #003366;
+  border-radius: 8px;
+}
+
+.tracking-container .hasil-tracking {
+  background: #eef4ff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+}
+
+.tracking-container .error-message {
+  color: red;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.tracking-container .daftar-do {
+  margin-top: 30px;
+}
+
+.tracking-container .daftar-do h3 {
+  margin-bottom: 15px;
+  color: #003366;
+}
+
+.tracking-container table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tracking-container table thead {
+  background: #003366;
+  color: white;
+}
+
+.tracking-container table th,
+.tracking-container table td {
+  padding: 14px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.tracking-container table tbody tr:hover {
+  background: #f8f9fc;
+}
+
+/* BUTTON EDIT STOK */
+
+.stok-container .btn-edit {
+  background: #0055aa;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.stok-container .btn-edit:hover {
+  background: #003366;
+}
+
+/* BUTTON RESET */
+
+.stok-container .btn-reset {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.stok-container .btn-reset:hover {
+  background: #d32f2f;
+}
+
+.stok-container .btn-reset {
+  margin-left: 10px;
+}
+.stok-container .tambah-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.stok-container .tambah-form input {
+  width: 100%;
+}
+
+.stok-container .tambah-form button {
+  min-height: 45px;
+}
+
+.stok-container .filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.stok-container .btn-reset {
+  margin-left: 0;
+}
+.stok-container .table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 10px;
+}
+
+.stok-container table {
+  min-width: 1000px;
+}
+.tracking-container .detail-perjalanan {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f8f9fc;
+  border-left: 5px solid #003366;
+  border-radius: 8px;
+}
+
+.tracking-container .detail-perjalanan h4 {
+  margin-bottom: 10px;
+  color: #003366;
+}
+
+.tracking-container .detail-perjalanan ul {
+  padding-left: 20px;
+}
+
+.tracking-container .detail-perjalanan li {
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+/* =========================
+   TRACKING RESPONSIVE FIX
+========================= */
+
+.tracking-container {
+  max-width: 1100px;
+  overflow-x: hidden;
+}
+
+.tracking-container .hasil-tracking {
+  background: #eef4ff;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+}
+
+.tracking-container .hasil-tracking p {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.tracking-container .detail-perjalanan {
+  margin-top: 18px;
+  padding: 18px 20px;
+  background: white;
+  border-left: 5px solid #003366;
+  border-radius: 10px;
+}
+
+.tracking-container .detail-perjalanan li {
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+.tracking-container .daftar-do {
+  overflow-x: auto;
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+}
+
+.tracking-container .daftar-do table {
+  min-width: 850px;
+}
+
+.tracking-container table th,
+.tracking-container table td {
+  vertical-align: top;
+  white-space: normal;
+}
+
+@media (max-width: 768px) {
+  .tracking-container {
+    margin: 20px 10px;
+    padding: 20px;
+  }
+
+  .tracking-search {
+    flex-direction: column;
+  }
+
+  .tracking-search button {
+    width: 100%;
+  }
+
+  .tracking-container .hasil-tracking {
+    padding: 18px;
+  }
+
+  .tracking-container .detail-perjalanan {
+    padding: 15px;
+  }
+}
