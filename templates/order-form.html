@@ -1,0 +1,54 @@
+
+  <div class="form-do">
+    <h2>Form Pemesanan Bahan Ajar</h2>
+
+    <input
+      v-model="form.nim"
+      placeholder="Masukkan NIM"
+    />
+
+    <input
+      v-model="form.nama"
+      placeholder="Masukkan Nama"
+    />
+
+    <select v-model="form.ekspedisi">
+      <option value="">Pilih Ekspedisi</option>
+
+      <option
+        v-for="item in ekspedisi"
+        :key="item"
+        :value="item"
+      >
+        {{ item }}
+      </option>
+    </select>
+
+    <select v-model="form.kodePaket">
+      <option value="">Pilih Paket Bahan Ajar</option>
+
+      <option
+        v-for="item in paket"
+        :key="item.kode"
+        :value="item.kode"
+      >
+        {{ item.kode }} - {{ item.nama }}
+      </option>
+    </select>
+
+    <div v-if="paketTerpilih" class="detail-paket">
+      <h4>Detail Paket</h4>
+      <p><strong>Kode Paket:</strong> {{ paketTerpilih.kode }}</p>
+      <p><strong>Nama Paket:</strong> {{ paketTerpilih.nama }}</p>
+      <p><strong>Harga:</strong> {{ formatRupiah(paketTerpilih.harga) }}</p>
+    </div>
+
+    <p>
+      <strong>Total Harga:</strong>
+      {{ formatRupiah(totalHarga) }}
+    </p>
+
+    <button @click="buatPesanan">
+      Buat Pesanan
+    </button>
+  </div>
