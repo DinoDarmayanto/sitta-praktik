@@ -1,7 +1,28 @@
 Vue.component('do-tracking', {
   template: window.AppTemplates.tracking,
 
-  props: ['data'],
+  props: {
+    data: {
+      type: [Object, Array],
+      default: function () {
+        return {};
+      }
+    },
+
+    paket: {
+      type: Array,
+      default: function () {
+        return [];
+      }
+    },
+
+    ekspedisi: {
+      type: Array,
+      default: function () {
+        return [];
+      }
+    }
+  },
 
   data() {
     return {
@@ -11,9 +32,6 @@ Vue.component('do-tracking', {
       hasilTracking: null,
       pesanError: '',
       progressText: '',
-
-      paket: [],
-      ekspedisi: ['JNE Regular', 'JNE Express'],
 
       form: {
         nim: '',
@@ -27,15 +45,14 @@ Vue.component('do-tracking', {
 
   created() {
     this.tracking = this.data || {};
-
-    if (window.app && window.app.state) {
-      this.paket = window.app.state.paket || [];
-    }
   },
 
   watch: {
-    data(newValue) {
-      this.tracking = newValue || {};
+    data: {
+      handler(newValue) {
+        this.tracking = newValue || {};
+      },
+      deep: true
     },
 
     keyword() {
@@ -43,30 +60,61 @@ Vue.component('do-tracking', {
     },
 
     'form.kodePaket'() {
-      this.hasilTracking = null;
+      this.pesanError = '';
+    },
+
+    'form.ekspedisi'() {
       this.pesanError = '';
     }
   },
 
   computed: {
     paketTerpilih() {
-      return this.paket.find(item => item.kode === this.form.kodePaket);
+      return this.paket.find((item) => {
+        return item.kode === this.form.kodePaket;
+      });
     },
 
     totalHarga() {
-      return this.paketTerpilih ? this.paketTerpilih.harga : 0;
+      if (!this.paketTerpilih) {
+        return 0;
+      }
+
+      return Number(this.paketTerpilih.harga) || 0;
     },
 
     trackingList() {
       if (Array.isArray(this.tracking)) {
-        return this.tracking;
+        return this.tracking.map((item) => {
+          return {
+            nomorDO: item.nomorDO,
+            nim: item.nim,
+            nama: item.nama,
+            ekspedisi: item.ekspedisi,
+            paket: item.paket,
+            tanggalKirim: item.tanggalKirim,
+            status: item.status,
+            totalHarga: item.totalHarga || item.total || 0,
+            perjalanan: item.perjalanan || []
+          };
+        });
       }
 
-      return Object.keys(this.tracking).map(nomorDO => ({
-        nomorDO: nomorDO,
-        ...this.tracking[nomorDO],
-        totalHarga: this.tracking[nomorDO].total || this.tracking[nomorDO].totalHarga || 0
-      }));
+      return Object.keys(this.tracking).map((nomorDO) => {
+        const item = this.tracking[nomorDO];
+
+        return {
+          nomorDO: nomorDO,
+          nim: item.nim,
+          nama: item.nama,
+          ekspedisi: item.ekspedisi,
+          paket: item.paket,
+          tanggalKirim: item.tanggalKirim,
+          status: item.status,
+          totalHarga: item.totalHarga || item.total || 0,
+          perjalanan: item.perjalanan || []
+        };
+      });
     }
   },
 
@@ -75,22 +123,22 @@ Vue.component('do-tracking', {
       this.hasilTracking = null;
       this.pesanError = '';
 
-      if (this.keyword === '') {
+      const keyword = this.keyword.trim().toLowerCase();
+
+      if (keyword === '') {
         this.pesanError = 'Nomor DO atau NIM wajib diisi!';
         return;
       }
 
-      const keywordLower = this.keyword.toLowerCase();
-
-      const hasil = this.trackingList.find(item => {
+      const hasil = this.trackingList.find((item) => {
         return (
-          item.nomorDO.toLowerCase() === keywordLower ||
-          String(item.nim).toLowerCase() === keywordLower
+          String(item.nomorDO).toLowerCase() === keyword ||
+          String(item.nim).toLowerCase() === keyword
         );
       });
 
       if (!hasil) {
-        this.pesanError = 'Data Delivery Order tidak ditemukan';
+        this.pesanError = 'Data Delivery Order tidak ditemukan.';
         return;
       }
 
@@ -101,6 +149,7 @@ Vue.component('do-tracking', {
       this.keyword = '';
       this.hasilTracking = null;
       this.pesanError = '';
+      this.progressText = '';
     },
 
     generateNomorDO() {
@@ -112,14 +161,7 @@ Vue.component('do-tracking', {
     },
 
     tambahDO() {
-      if (
-        this.form.nim === '' ||
-        this.form.nama === '' ||
-        this.form.ekspedisi === '' ||
-        this.form.kodePaket === '' ||
-        this.form.tanggalKirim === ''
-      ) {
-        alert('Semua data Delivery Order wajib diisi!');
+      if (!this.validasiFormDO()) {
         return;
       }
 
@@ -157,6 +199,9 @@ Vue.component('do-tracking', {
         });
       }
 
+      this.hasilTracking = dataBaru;
+      this.keyword = nomorDOBaru;
+
       alert('Delivery Order berhasil ditambahkan dengan nomor ' + nomorDOBaru);
 
       this.resetFormDO();
@@ -168,14 +213,14 @@ Vue.component('do-tracking', {
         return;
       }
 
-      if (this.progressText === '') {
+      if (this.progressText.trim() === '') {
         alert('Keterangan progress wajib diisi!');
         return;
       }
 
       const progressBaru = {
         waktu: this.formatWaktuSekarang(),
-        keterangan: this.progressText
+        keterangan: this.progressText.trim()
       };
 
       if (!this.hasilTracking.perjalanan) {
@@ -183,9 +228,38 @@ Vue.component('do-tracking', {
       }
 
       this.hasilTracking.perjalanan.push(progressBaru);
-      this.hasilTracking.status = this.progressText;
+      this.hasilTracking.status = this.progressText.trim();
+
+      if (!Array.isArray(this.tracking) && this.hasilTracking.nomorDO) {
+        const nomorDO = this.hasilTracking.nomorDO;
+
+        if (this.tracking[nomorDO]) {
+          this.$set(this.tracking[nomorDO], 'perjalanan', this.hasilTracking.perjalanan);
+          this.$set(this.tracking[nomorDO], 'status', this.hasilTracking.status);
+        }
+      }
 
       this.progressText = '';
+    },
+
+    validasiFormDO() {
+      if (
+        this.form.nim.trim() === '' ||
+        this.form.nama.trim() === '' ||
+        this.form.ekspedisi === '' ||
+        this.form.kodePaket === '' ||
+        this.form.tanggalKirim === ''
+      ) {
+        alert('Semua data Delivery Order wajib diisi!');
+        return false;
+      }
+
+      if (!this.paketTerpilih) {
+        alert('Paket bahan ajar belum valid!');
+        return false;
+      }
+
+      return true;
     },
 
     resetFormDO() {
@@ -199,7 +273,7 @@ Vue.component('do-tracking', {
     },
 
     formatRupiah(angka) {
-      return 'Rp ' + Number(angka).toLocaleString('id-ID');
+      return 'Rp ' + Number(angka || 0).toLocaleString('id-ID');
     },
 
     formatTanggal(tanggal) {

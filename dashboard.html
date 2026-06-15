@@ -3,98 +3,155 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>SITTA UT - Dashboard</title>
+
   <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
-  <div id="app">
-    <nav>
-      <button @click="tab = 'stok'">Stok</button>
-      <button @click="tab = 'tracking'">Tracking DO</button>
-      <button @click="tab = 'order'">Pemesanan</button>
+  <div id="app" v-cloak>
+    <header class="dashboard-header">
+      <h1>SITTA UT</h1>
+      <p>Sistem Informasi Transaksi Bahan Ajar</p>
+    </header>
+
+    <nav class="dashboard-nav">
+      <button
+        :class="{ active: tab === 'stok' }"
+        @click="tab = 'stok'"
+      >
+        Stok
+      </button>
+
+      <button
+        :class="{ active: tab === 'tracking' }"
+        @click="tab = 'tracking'"
+      >
+        Tracking DO
+      </button>
+
+      <button
+        :class="{ active: tab === 'order' }"
+        @click="tab = 'order'"
+      >
+        Pemesanan
+      </button>
     </nav>
 
-    <section v-show="tab === 'stok'">
-      <ba-stock-table :items="state.stok"></ba-stock-table>
-    </section>
+    <main class="dashboard-content">
+      <section v-show="tab === 'stok'">
+        <ba-stock-table
+          :items="state.stok">
+        </ba-stock-table>
+      </section>
 
-    <section v-show="tab === 'tracking'">
-      <do-tracking
-        :data="state.tracking"
-        :paket="state.paket"
-        :ekspedisi="state.pengirimanList">
-      </do-tracking>
-    </section>
+      <section v-show="tab === 'tracking'">
+        <do-tracking
+          :data="state.tracking"
+          :paket="state.paket"
+          :ekspedisi="state.pengirimanList">
+        </do-tracking>
+      </section>
 
-    <section v-show="tab === 'order'">
-      <order-form
-        :paket="state.paket"
-        :ekspedisi="state.pengirimanList"
-        @created="handleNewDO">
-      </order-form>
-    </section>
+      <section v-show="tab === 'order'">
+        <order-form
+          :paket="state.paket"
+          :ekspedisi="state.pengirimanList"
+          @created="handleNewDO">
+        </order-form>
+      </section>
+    </main>
 
     <app-modal ref="modal"></app-modal>
   </div>
-
-  <div id="template-container"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 
   <script>
     window.AppTemplates = {};
-  
+
     function cleanTemplate(html) {
       html = html.replace(/<script[\s\S]*?<\/script>/gi, '');
-  
+
       var parser = new DOMParser();
       var doc = parser.parseFromString(html, 'text/html');
       var template = doc.querySelector('template');
-  
+
       if (template) {
         return template.innerHTML.trim();
       }
-  
+
       return doc.body.innerHTML.trim();
     }
-  
-    Promise.all([
-      fetch('templates/stock-table.html').then(r => r.text()),
-      fetch('templates/do-tracking.html').then(r => r.text()),
-      fetch('templates/order-form.html').then(r => r.text()),
-      fetch('templates/status-badge.html').then(r => r.text()),
-      fetch('templates/app-modal.html').then(r => r.text())
-    ]).then(function(result) {
-      window.AppTemplates.stock = cleanTemplate(result[0]);
-      window.AppTemplates.tracking = cleanTemplate(result[1]);
-      window.AppTemplates.order = cleanTemplate(result[2]);
-      window.AppTemplates.badge = cleanTemplate(result[3]);
-      window.AppTemplates.modal = cleanTemplate(result[4]);
-  
-      var scriptList = [
-        'js/services/api.js',
-        'js/components/status-badge.js',
-        'js/components/stock-table.js',
-        'js/components/do-tracking.js',
-        'js/components/order-form.js',
-        'js/components/app-modal.js',
-        'js/app.js'
-      ];
-  
-      function loadScript(index) {
-        if (index >= scriptList.length) return;
-  
+
+    function fetchTemplate(path) {
+      return fetch(path).then(function(response) {
+        if (!response.ok) {
+          throw new Error('Template tidak ditemukan: ' + path);
+        }
+
+        return response.text();
+      });
+    }
+
+    function loadScript(path) {
+      return new Promise(function(resolve, reject) {
         var script = document.createElement('script');
-        script.src = scriptList[index];
-        script.onload = function() {
-          loadScript(index + 1);
+        script.src = path;
+
+        script.onload = resolve;
+
+        script.onerror = function() {
+          reject(new Error('Script gagal dimuat: ' + path));
         };
+
         document.body.appendChild(script);
-      }
-  
-      loadScript(0);
-    });
+      });
+    }
+
+    Promise.all([
+      fetchTemplate('templates/stock-table.html'),
+      fetchTemplate('templates/do-tracking.html'),
+      fetchTemplate('templates/order-form.html'),
+      fetchTemplate('templates/status-badge.html'),
+      fetchTemplate('templates/app-modal.html')
+    ])
+      .then(function(result) {
+        window.AppTemplates.stock = cleanTemplate(result[0]);
+        window.AppTemplates.tracking = cleanTemplate(result[1]);
+        window.AppTemplates.order = cleanTemplate(result[2]);
+        window.AppTemplates.badge = cleanTemplate(result[3]);
+        window.AppTemplates.modal = cleanTemplate(result[4]);
+
+        return loadScript('js/services/api.js');
+      })
+      .then(function() {
+        return loadScript('js/components/status-badge.js');
+      })
+      .then(function() {
+        return loadScript('js/components/stock-table.js');
+      })
+      .then(function() {
+        return loadScript('js/components/do-tracking.js');
+      })
+      .then(function() {
+        return loadScript('js/components/order-form.js');
+      })
+      .then(function() {
+        return loadScript('js/components/app-modal.js');
+      })
+      .then(function() {
+        return loadScript('js/app.js');
+      })
+      .catch(function(error) {
+        console.error(error);
+
+        document.body.insertAdjacentHTML(
+          'beforeend',
+          '<div style="padding:16px;color:red;">Gagal memuat aplikasi. Cek console untuk detail error.</div>'
+        );
+      });
   </script>
 </body>
 </html>

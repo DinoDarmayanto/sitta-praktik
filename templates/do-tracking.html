@@ -1,163 +1,266 @@
+<div class="tracking-container">
+  <div class="tracking-header">
+    <h1>Tracking Delivery Order</h1>
+    <p>Lacak status pengiriman bahan ajar Universitas Terbuka</p>
+  </div>
 
-  <div class="tracking-container">
-    <div class="tracking-header">
-      <h1>Tracking Pengiriman</h1>
-      <p>Lacak status pengiriman bahan ajar Universitas Terbuka</p>
+  <!-- PENCARIAN DO / NIM -->
+  <div class="tracking-search">
+    <input
+      type="text"
+      v-model="keyword"
+      placeholder="Cari berdasarkan Nomor DO atau NIM"
+      @keyup.enter="cariTracking"
+      @keyup.esc="resetSearch"
+    />
+
+    <button @click="cariTracking">
+      Lacak
+    </button>
+
+    <button @click="resetSearch">
+      Reset
+    </button>
+  </div>
+
+  <p class="helper-text">
+    Tekan <strong>Enter</strong> untuk mencari dan <strong>Esc</strong> untuk reset pencarian.
+  </p>
+
+  <!-- ERROR -->
+  <div
+    v-if="pesanError"
+    class="error-message"
+  >
+    {{ pesanError }}
+  </div>
+
+  <!-- HASIL TRACKING -->
+  <div
+    v-if="hasilTracking"
+    class="hasil-tracking"
+  >
+    <h3>Hasil Tracking</h3>
+
+    <p>
+      <strong>Nomor DO:</strong>
+      {{ hasilTracking.nomorDO }}
+    </p>
+
+    <p>
+      <strong>NIM:</strong>
+      {{ hasilTracking.nim }}
+    </p>
+
+    <p>
+      <strong>Nama:</strong>
+      {{ hasilTracking.nama }}
+    </p>
+
+    <p>
+      <strong>Ekspedisi:</strong>
+      {{ hasilTracking.ekspedisi }}
+    </p>
+
+    <p>
+      <strong>Paket:</strong>
+      {{ hasilTracking.paket }}
+    </p>
+
+    <p>
+      <strong>Tanggal Kirim:</strong>
+      {{ formatTanggal(hasilTracking.tanggalKirim) }}
+    </p>
+
+    <p>
+      <strong>Status:</strong>
+      {{ hasilTracking.status }}
+    </p>
+
+    <p>
+      <strong>Total Harga:</strong>
+      {{ formatRupiah(hasilTracking.totalHarga) }}
+    </p>
+
+    <!-- PROGRESS PERJALANAN -->
+    <div
+      v-if="hasilTracking.perjalanan && hasilTracking.perjalanan.length > 0"
+      class="detail-perjalanan"
+    >
+      <h4>Perjalanan Paket</h4>
+
+      <ul>
+        <li
+          v-for="item in hasilTracking.perjalanan"
+          :key="item.waktu"
+        >
+          <strong>{{ item.waktu }}</strong>
+          <br />
+          {{ item.keterangan }}
+        </li>
+      </ul>
     </div>
 
-    <div class="tracking-search">
+    <div
+      v-else
+      class="empty-progress"
+    >
+      Belum ada progress perjalanan.
+    </div>
+
+    <!-- TAMBAH PROGRESS -->
+    <div class="progress-form">
+      <h4>Tambah Progress Pengiriman</h4>
+
       <input
         type="text"
-        v-model="keyword"
-        placeholder="Cari berdasarkan Nomor DO atau NIM"
-        @keyup.enter="cariTracking"
-        @keyup.esc="resetSearch"
+        v-model="progressText"
+        placeholder="Contoh: Paket tiba di gudang Jakarta"
+        @keyup.enter="tambahProgress"
       />
 
-      <button @click="cariTracking">Lacak</button>
-      <button @click="resetSearch">Reset</button>
+      <button @click="tambahProgress">
+        Tambah Progress
+      </button>
     </div>
+  </div>
 
-    <div v-if="pesanError" class="error-message">
-      {{ pesanError }}
-    </div>
+  <!-- FORM TAMBAH DO -->
+  <div class="form-do">
+    <h3>Tambah Delivery Order Baru</h3>
 
-    <div v-if="hasilTracking" class="hasil-tracking">
-      <h3>Hasil Tracking</h3>
+    <input
+      type="text"
+      v-model="form.nim"
+      placeholder="Masukkan NIM"
+      @keyup.enter="tambahDO"
+    />
 
-      <p><strong>Nomor DO:</strong> {{ hasilTracking.nomorDO }}</p>
-      <p><strong>NIM:</strong> {{ hasilTracking.nim }}</p>
-      <p><strong>Nama:</strong> {{ hasilTracking.nama }}</p>
-      <p><strong>Ekspedisi:</strong> {{ hasilTracking.ekspedisi }}</p>
-      <p><strong>Paket:</strong> {{ hasilTracking.paket }}</p>
-      <p><strong>Tanggal Kirim:</strong> {{ formatTanggal(hasilTracking.tanggalKirim) }}</p>
-      <p><strong>Status:</strong> {{ hasilTracking.status }}</p>
-      <p><strong>Total Harga:</strong> {{ formatRupiah(hasilTracking.totalHarga) }}</p>
+    <input
+      type="text"
+      v-model="form.nama"
+      placeholder="Masukkan Nama"
+      @keyup.enter="tambahDO"
+    />
 
-      <div v-if="hasilTracking.perjalanan" class="detail-perjalanan">
-        <h4>Perjalanan Paket</h4>
+    <select v-model="form.ekspedisi">
+      <option value="">
+        Pilih Ekspedisi
+      </option>
+
+      <option
+        v-for="item in ekspedisi"
+        :key="typeof item === 'object' ? item.kode || item.nama : item"
+        :value="typeof item === 'object' ? item.nama : item"
+      >
+        {{ typeof item === 'object' ? item.nama : item }}
+      </option>
+    </select>
+
+    <select v-model="form.kodePaket">
+      <option value="">
+        Pilih Paket Bahan Ajar
+      </option>
+
+      <option
+        v-for="item in paket"
+        :key="item.kode"
+        :value="item.kode"
+      >
+        {{ item.kode }} - {{ item.nama }}
+      </option>
+    </select>
+
+    <!-- DETAIL PAKET -->
+    <div
+      v-if="paketTerpilih"
+      class="detail-paket"
+    >
+      <h4>Detail Paket</h4>
+
+      <p>
+        <strong>Kode Paket:</strong>
+        {{ paketTerpilih.kode }}
+      </p>
+
+      <p>
+        <strong>Nama Paket:</strong>
+        {{ paketTerpilih.nama }}
+      </p>
+
+      <p>
+        <strong>Harga:</strong>
+        {{ formatRupiah(paketTerpilih.harga) }}
+      </p>
+
+      <div v-if="paketTerpilih.isi && paketTerpilih.isi.length > 0">
+        <strong>Isi Paket:</strong>
 
         <ul>
-          <li v-for="item in hasilTracking.perjalanan" :key="item.waktu">
-            <strong>{{ item.waktu }}</strong>
-            <br />
-            {{ item.keterangan }}
+          <li
+            v-for="buku in paketTerpilih.isi"
+            :key="buku"
+          >
+            {{ buku }}
           </li>
         </ul>
       </div>
-
-      <div class="progress-form">
-        <h4>Tambah Progress Pengiriman</h4>
-
-        <input
-          type="text"
-          v-model="progressText"
-          placeholder="Contoh: Paket tiba di gudang Jakarta"
-          @keyup.enter="tambahProgress"
-        />
-
-        <button @click="tambahProgress">Tambah Progress</button>
-      </div>
     </div>
 
-    <div class="form-do">
-      <h3>Tambah Delivery Order Baru</h3>
+    <input
+      type="date"
+      v-model="form.tanggalKirim"
+    />
 
-      <input
-        type="text"
-        v-model="form.nim"
-        placeholder="Masukkan NIM"
-        @keyup.enter="tambahDO"
-      />
+    <p>
+      <strong>Total Harga:</strong>
+      {{ formatRupiah(totalHarga) }}
+    </p>
 
-      <input
-        type="text"
-        v-model="form.nama"
-        placeholder="Masukkan Nama"
-        @keyup.enter="tambahDO"
-      />
-
-      <select v-model="form.ekspedisi">
-        <option value="">Pilih Ekspedisi</option>
-
-        <option
-          v-for="item in ekspedisi"
-          :key="item"
-          :value="item"
-        >
-          {{ item }}
-        </option>
-      </select>
-
-      <select v-model="form.kodePaket">
-        <option value="">Pilih Paket Bahan Ajar</option>
-
-        <option
-          v-for="item in paket"
-          :key="item.kode"
-          :value="item.kode"
-        >
-          {{ item.kode }} - {{ item.nama }}
-        </option>
-      </select>
-
-      <div v-if="paketTerpilih" class="detail-paket">
-        <h4>Detail Paket</h4>
-
-        <p><strong>Kode Paket:</strong> {{ paketTerpilih.kode }}</p>
-        <p><strong>Nama Paket:</strong> {{ paketTerpilih.nama }}</p>
-        <p><strong>Harga:</strong> {{ formatRupiah(paketTerpilih.harga) }}</p>
-
-        <div v-if="paketTerpilih.isi && paketTerpilih.isi.length">
-          <strong>Isi Paket:</strong>
-
-          <ul>
-            <li v-for="buku in paketTerpilih.isi" :key="buku">
-              {{ buku }}
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <input type="date" v-model="form.tanggalKirim" />
-
-      <p>
-        <strong>Total Harga:</strong>
-        {{ formatRupiah(totalHarga) }}
-      </p>
-
-      <button @click="tambahDO">Tambah DO</button>
-    </div>
-
-    <div class="daftar-do">
-      <h3>Daftar Delivery Order</h3>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Nomor DO</th>
-            <th>NIM</th>
-            <th>Nama</th>
-            <th>Ekspedisi</th>
-            <th>Paket</th>
-            <th>Tanggal Kirim</th>
-            <th>Status</th>
-            <th>Total Harga</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr v-for="item in trackingList" :key="item.nomorDO">
-            <td>{{ item.nomorDO }}</td>
-            <td>{{ item.nim }}</td>
-            <td>{{ item.nama }}</td>
-            <td>{{ item.ekspedisi }}</td>
-            <td>{{ item.paket }}</td>
-            <td>{{ formatTanggal(item.tanggalKirim) }}</td>
-            <td>{{ item.status }}</td>
-            <td>{{ formatRupiah(item.totalHarga) }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <button @click="tambahDO">
+      Tambah DO
+    </button>
   </div>
+
+  <!-- DAFTAR DO -->
+  <div class="daftar-do">
+    <h3>Daftar Delivery Order</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nomor DO</th>
+          <th>NIM</th>
+          <th>Nama</th>
+          <th>Ekspedisi</th>
+          <th>Paket</th>
+          <th>Tanggal Kirim</th>
+          <th>Status</th>
+          <th>Total Harga</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr
+          v-for="item in trackingList"
+          :key="item.nomorDO"
+        >
+          <td v-text="item.nomorDO"></td>
+          <td>{{ item.nim }}</td>
+          <td>{{ item.nama }}</td>
+          <td>{{ item.ekspedisi }}</td>
+          <td>{{ item.paket }}</td>
+          <td>{{ formatTanggal(item.tanggalKirim) }}</td>
+          <td>{{ item.status }}</td>
+          <td>{{ formatRupiah(item.totalHarga) }}</td>
+        </tr>
+
+        <tr v-if="trackingList.length === 0">
+          <td colspan="8">
+            Belum ada data Delivery Order.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

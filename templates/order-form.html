@@ -1,31 +1,45 @@
+<div class="order-container">
 
-  <div class="form-do">
+  <div class="order-header">
     <h2>Form Pemesanan Bahan Ajar</h2>
+    <p>Silakan lengkapi data pemesanan bahan ajar Universitas Terbuka.</p>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-do">
 
     <input
+      type="text"
       v-model="form.nim"
       placeholder="Masukkan NIM"
+      @keyup.enter="buatPesanan"
     />
 
     <input
+      type="text"
       v-model="form.nama"
-      placeholder="Masukkan Nama"
+      placeholder="Masukkan Nama Mahasiswa"
+      @keyup.enter="buatPesanan"
     />
 
     <select v-model="form.ekspedisi">
-      <option value="">Pilih Ekspedisi</option>
+      <option value="">
+        Pilih Ekspedisi
+      </option>
 
       <option
         v-for="item in ekspedisi"
-        :key="item"
-        :value="item"
+        :key="typeof item === 'object' ? item.kode : item"
+        :value="typeof item === 'object' ? item.nama : item"
       >
-        {{ item }}
+        {{ typeof item === 'object' ? item.nama : item }}
       </option>
     </select>
 
     <select v-model="form.kodePaket">
-      <option value="">Pilih Paket Bahan Ajar</option>
+      <option value="">
+        Pilih Paket Bahan Ajar
+      </option>
 
       <option
         v-for="item in paket"
@@ -36,19 +50,97 @@
       </option>
     </select>
 
-    <div v-if="paketTerpilih" class="detail-paket">
+    <input
+      type="date"
+      v-model="form.tanggalKirim"
+    />
+
+    <!-- DETAIL PAKET -->
+    <div
+      v-if="paketTerpilih"
+      class="detail-paket"
+    >
       <h4>Detail Paket</h4>
-      <p><strong>Kode Paket:</strong> {{ paketTerpilih.kode }}</p>
-      <p><strong>Nama Paket:</strong> {{ paketTerpilih.nama }}</p>
-      <p><strong>Harga:</strong> {{ formatRupiah(paketTerpilih.harga) }}</p>
+
+      <p>
+        <strong>Kode Paket:</strong>
+        {{ paketTerpilih.kode }}
+      </p>
+
+      <p>
+        <strong>Nama Paket:</strong>
+        {{ paketTerpilih.nama }}
+      </p>
+
+      <p>
+        <strong>Harga:</strong>
+        {{ formatRupiah(paketTerpilih.harga) }}
+      </p>
+
+      <div
+        v-if="paketTerpilih.isi && paketTerpilih.isi.length"
+      >
+        <strong>Isi Paket:</strong>
+
+        <ul>
+          <li
+            v-for="buku in paketTerpilih.isi"
+            :key="buku"
+          >
+            {{ buku }}
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <p>
-      <strong>Total Harga:</strong>
-      {{ formatRupiah(totalHarga) }}
-    </p>
+    <!-- TOTAL -->
+    <div
+      v-show="paketTerpilih"
+      class="total-section"
+    >
+      <h3>
+        Total Harga:
+        {{ formatRupiah(totalHarga) }}
+      </h3>
+    </div>
 
     <button @click="buatPesanan">
       Buat Pesanan
     </button>
+
   </div>
+
+  <!-- PREVIEW -->
+  <div
+    v-if="form.nim && form.nama"
+    class="preview-order"
+  >
+    <h3>Preview Pemesanan</h3>
+
+    <p>
+      <strong>NIM:</strong>
+      {{ form.nim }}
+    </p>
+
+    <p>
+      <strong>Nama:</strong>
+      {{ form.nama }}
+    </p>
+
+    <p>
+      <strong>Ekspedisi:</strong>
+      {{ form.ekspedisi || '-' }}
+    </p>
+
+    <p>
+      <strong>Paket:</strong>
+      {{ paketTerpilih ? paketTerpilih.nama : '-' }}
+    </p>
+
+    <p>
+      <strong>Tanggal Kirim:</strong>
+      {{ form.tanggalKirim || '-' }}
+    </p>
+  </div>
+
+</div>

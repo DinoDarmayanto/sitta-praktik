@@ -1,1 +1,37 @@
-<div></div>
+<div
+  v-if="visible"
+  class="modal-overlay"
+>
+
+  <div class="modal-content">
+
+    <h3>
+      {{ title }}
+    </h3>
+
+    <div
+      class="modal-body"
+      v-html="message">
+    </div>
+
+    <div class="modal-footer">
+
+      <button
+        class="btn-cancel"
+        @click="close"
+      >
+        Batal
+      </button>
+
+      <button
+        class="btn-confirm"
+        @click="confirm"
+      >
+        Ya
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

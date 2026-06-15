@@ -774,3 +774,209 @@ button {
     padding: 15px;
   }
 }
+/* =========================
+   RESPONSIVE & UI FRIENDLY FIX
+   Tambahkan di paling bawah style.css
+========================= */
+
+[v-cloak] {
+  display: none;
+}
+
+body {
+  color: #1f2937;
+}
+
+/* DASHBOARD BARU */
+.dashboard-header {
+  background: #003366;
+  color: white;
+  text-align: center;
+  padding: 24px 16px;
+}
+
+.dashboard-header h1 {
+  margin-bottom: 6px;
+}
+
+.dashboard-nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  background: white;
+  padding: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-nav button {
+  border: none;
+  padding: 11px 18px;
+  border-radius: 8px;
+  background: #e5e7eb;
+  font-weight: bold;
+}
+
+.dashboard-nav button.active {
+  background: #003366;
+  color: white;
+}
+
+.dashboard-content {
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+/* FORM BIAR RAPI */
+.stok-container .tambah-form,
+.stok-container .filter-container,
+.tracking-container .tracking-search,
+.tracking-container .form-do,
+.tracking-container .progress-form,
+.order-container .form-do {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+input,
+select {
+  min-height: 44px;
+}
+
+/* TABLE RESPONSIVE */
+.table-responsive,
+.daftar-do {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.stok-container table,
+.tracking-container table {
+  min-width: 900px;
+}
+
+/* BUTTON DELETE */
+.btn-delete {
+  background: #d32f2f;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.btn-delete:hover {
+  background: #b71c1c;
+}
+
+/* TOOLTIP */
+.tooltip {
+  max-width: 260px;
+  line-height: 1.4;
+}
+
+/* ORDER FORM */
+.order-container,
+.preview-order {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.preview-order {
+  border-left: 5px solid #003366;
+}
+
+/* MODAL COMPONENT */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-overlay .modal-content {
+  width: 90%;
+  max-width: 420px;
+  margin: 0;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.btn-cancel {
+  background: #777;
+  color: white;
+}
+
+.btn-confirm {
+  background: #d32f2f;
+  color: white;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .login-container {
+    width: 90%;
+    padding: 35px 24px;
+  }
+
+  .login-container h1 {
+    font-size: 30px;
+  }
+
+  .dashboard-nav {
+    flex-direction: column;
+  }
+
+  .dashboard-nav button {
+    width: 100%;
+  }
+
+  .dashboard-content {
+    margin: 16px auto;
+    padding: 0 10px;
+  }
+
+  .stok-container,
+  .tracking-container,
+  .order-container {
+    margin: 16px 8px;
+    padding: 16px;
+  }
+
+  .tracking-container .hasil-tracking,
+  .tracking-container .detail-perjalanan,
+  .daftar-do,
+  .detail-paket {
+    padding: 14px;
+  }
+
+  th,
+  td {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .tooltip {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: 20px;
+    top: auto;
+    width: auto;
+    max-width: none;
+  }
+}
